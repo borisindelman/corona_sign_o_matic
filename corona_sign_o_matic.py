@@ -1,17 +1,32 @@
 import io
-
 import pdfrw
 from reportlab.pdfgen import canvas
 from time import gmtime, strftime
-from pdf_over_mail import send_pdf_over_mail
+from pdf_over_telegram import send_pdf_over_telegram
+
+def run_batch():
+
+    Year = "2020"
+    Month = [5,7]
+    Days = [1, 31]
+    for month in range(Month[0], Month[1]+1):
+        for day in range(Days[0], Days[1]+1):
+            date = "{}.{}.{}".format(day, month, Year)
+            reversed_date = "{}.{:02d}.{:02d}".format(Year, month, day)
+            # date = strftime("%d.%m.%Y", gmtime())
+            canvas_data = get_overlay_canvas(date)
+            form = merge(canvas_data, template_path='./health_decleration.pdf')
+            filename = './media/health_decleration_{}.pdf'.format(reversed_date)
+            save(form, filename=filename)
+            # send_pdf_over_telegram(filename)
 
 def run():
     date = strftime("%d.%m.%Y", gmtime())
     canvas_data = get_overlay_canvas(date)
     form = merge(canvas_data, template_path='./health_decleration.pdf')
-    filename = 'health_decleration_{}.pdf'.format(date)
+    filename = './media/health_decleration_{}.pdf'.format(date)
     save(form, filename=filename)
-    send_pdf_over_mail(filename)
+    send_pdf_over_telegram(filename)
 
 
 def get_overlay_canvas(date) -> io.BytesIO:

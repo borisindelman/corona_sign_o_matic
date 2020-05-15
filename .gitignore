@@ -1,0 +1,5 @@
+media/
+venv/
+.idea/
+__pycache__/
+conf/

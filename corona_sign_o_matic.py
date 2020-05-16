@@ -15,18 +15,18 @@ def run_batch():
             reversed_date = "{}.{:02d}.{:02d}".format(Year, month, day)
             # date = strftime("%d.%m.%Y", gmtime())
             canvas_data = get_overlay_canvas(date)
-            form = merge(canvas_data, template_path='./health_decleration.pdf')
+            form = merge(canvas_data, template_path='health_decleration_peleg.pdf')
             filename = './media/health_decleration_{}.pdf'.format(reversed_date)
             save(form, filename=filename)
             # send_pdf_over_telegram(filename)
 
-def run():
+def run(conf_name):
     date = strftime("%d.%m.%Y", gmtime())
     canvas_data = get_overlay_canvas(date)
-    form = merge(canvas_data, template_path='./health_decleration.pdf')
-    filename = './media/health_decleration_{}.pdf'.format(date)
+    form = merge(canvas_data, template_path='./health_decleration_{}.pdf'.format(conf_name))
+    filename = './media/health_decleration_{}_{}.pdf'.format(conf_name, date)
     save(form, filename=filename)
-    send_pdf_over_telegram(filename)
+    send_pdf_over_telegram(conf_name, filename)
 
 
 def get_overlay_canvas(date) -> io.BytesIO:
@@ -56,4 +56,6 @@ def save(form: io.BytesIO, filename: str):
         f.write(form.read())
 
 if __name__ == '__main__':
-    run()
+    conf_list = ['peleg', 'noam', 'noa']
+    for conf in conf_list:
+        run(conf)

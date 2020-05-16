@@ -3,3 +3,6 @@ venv/
 .idea/
 __pycache__/
 conf/
+*.pdf
+!health_decleration_empty.pdf
+*.conf

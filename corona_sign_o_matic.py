@@ -31,7 +31,7 @@ def run_batch():
 
 def run_hador_haba(conf):
     date = strftime("%d.%m.%Y", gmtime())
-    canvas_data = get_overlay_canvas(date)
+    canvas_data = get_overlay_canvas(date, conf['type'])
     form = merge(canvas_data, template_path='./health_decleration_{}.pdf'.format(conf['child_name']))
     filename = './media/health_decleration_{}_{}.pdf'.format(conf['child_name'], date)
     save(form, filename=filename)
@@ -47,23 +47,37 @@ def run_kasum(conf, temperature):
 def run_really(conf):
     ReallyFormFiller().fill_form(conf)
 
+def run_saar(conf):
+    date = strftime("%d.%m.%Y", gmtime())
+    canvas_data = get_overlay_canvas(date, conf['type'])
+    form = merge(canvas_data, template_path='./health_decleration_{}.pdf'.format(conf['child_name']))
+    filename = './media/health_decleration_{}_{}.pdf'.format(conf['child_name'], date)
+    save(form, filename=filename)
+    send_pdf_over_telegram(conf['child_name'], filename)
+    os.remove(filename)
+
 def run(conf):
     if conf['type'] == 'hador_haba':
         run_hador_haba(conf)
-    elif conf['type'] == 'kasum':
-        run_kasum(conf)
-    elif conf['type'] == 'really':
-        run_really(conf)
+    elif conf['type'] == 'saar':
+        run_saar(conf)
 
 
 
-def get_overlay_canvas(date) -> io.BytesIO:
+def get_overlay_canvas(date, type) -> io.BytesIO:
     data = io.BytesIO()
     pdf = canvas.Canvas(data)
-    random_shift = random.randint(1, 50)
-    pdf.drawString(x=100 + random_shift, y=205, text=date)
-    random_shift = random.randint(1, 50)
-    pdf.drawString(x=100 + random_shift, y=255, text=date)
+    if type == 'hador_haba':
+        random_shift = random.randint(1, 50)
+        pdf.drawString(x=100 + random_shift, y=205, text=date)
+        random_shift = random.randint(1, 50)
+        pdf.drawString(x=100 + random_shift, y=255, text=date)
+    elif type == 'saar':
+        random_shift = random.randint(1, 10)
+        pdf.setFillColorRGB(0, 0, 0)
+        pdf.setFontSize(size=15)
+        pdf.drawString(x=210 + random_shift, y=180, text=date)
+
     pdf.save()
     data.seek(0)
     return data
@@ -88,7 +102,8 @@ def save(form: io.BytesIO, filename: str):
 if __name__ == '__main__':
     # conf_list = ['peleg', 'noam', 'noa']
     # conf_list = ['peleg']
-    conf_list = [{'child_name': 'peleg', 'type': 'hador_haba'}]
+    # conf_list = [{'child_name': 'peleg', 'type': 'hador_haba'}]
+    conf_list = [{'child_name': 'saar', 'type': 'saar'}]
     # conf_list = [{'child_name': 'noam',
     #               'hebrew_child_name': 'נועם',
     #               'hebrew_parent_name': 'נגה ואופיר גולן',

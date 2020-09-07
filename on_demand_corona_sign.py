@@ -9,6 +9,7 @@ import configparser
 import logging
 import telegram_send
 
+from education_form_filler import EducationWebTopFormFiller
 from kasum_form_filler import KasumFormFiller
 from nizanim_form_filler import NizanimFormFiller
 from really_form_filler import ReallyFormFiller
@@ -80,6 +81,36 @@ def fill_really(update, context):
         log_message(
             f"{child_first_name} - invalid command")
 
+def fill_education_web_top(update, context):
+    log_message(f"{child_first_name} - recieved message " \
+                f"from: {update.message.from_user['first_name']} {update.message.from_user['last_name']} " \
+                f"at time: {str(update.message.date)} with: {update.message.text}")
+
+    if is_msg_too_old(update.message.date):
+        logging.info(
+            f"Message too old. Do nothing")
+        return
+    if update.message.text.lower() == 'fill':
+        log_message(f"{child_first_name} - Filling a form for {current_config['parent_name']}")
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text=f"OK, Filling a form for {current_config['parent_name']} :)")
+        snapshots = EducationWebTopFormFiller().fill_form(form_fields=current_config, submit=True)
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Done!")
+        if len(snapshots) > 0:
+            for photo_path in snapshots:
+                with open(photo_path, 'rb') as photo:
+                    context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo)
+                with open(photo_path, 'rb') as photo:
+                    telegram_send.send(conf='master.conf', images=[photo])
+                os.remove(photo_path)
+        log_message(
+            f"{child_first_name} - Finished filling form for {current_config['parent_name']}")
+
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry, this is not a valid command. try: fill")
+        log_message(
+            f"{child_first_name} - invalid command")
+
 def fill_kesem(update, context):
     log_message(f"{child_first_name} - recieved message from: {update.message.from_user['first_name']} " \
                   f"{update.message.from_user['last_name']} with: {update.message.text}")
@@ -118,12 +149,12 @@ def fill_kesem(update, context):
         log_message(
             f"{child_first_name} - invalid command")
 
-def start_kasum(update, context):
+def start_w_deperature(update, context):
     logging.info(f"{child_first_name} - recieved message from: {update.message.chat['first_name']} {update.message.chat['last_name']} with: {update.message.text}")
     context.bot.send_message(chat_id=update.effective_chat.id, text="Hi, to fill a form type: fill 36.7")
     context.bot.send_message(chat_id=update.effective_chat.id, text=f"Or any temperature between {min_temp} and {max_temp}")
 
-def start_really(update, context):
+def start_no_temperature(update, context):
     logging.info(f"{child_first_name} - recieved message from: {update.message.chat['first_name']} {update.message.chat['last_name']} with: {update.message.text}")
     context.bot.send_message(chat_id=update.effective_chat.id, text="Hi, to fill a form type: fill")
 
@@ -180,7 +211,14 @@ if __name__ == '__main__':
                        'type': 'nizanim',
                        'child_id': '343056016',
                        'phone_number': '0544838975',
-                       'email': 'indelman@gmail.com'}
+                       'email': 'indelman@gmail.com'},
+              'moshe': {'child_first_name': 'moshe',
+                        'parent_name': 'moshe',
+                        'type': EducationWebTopFormFiller,
+                        'user_name': '4135457',
+                        'password': '9921',
+                        'parent_id': '015526122'
+                        }
               }
     current_config = config[child_first_name]
 
@@ -190,18 +228,24 @@ if __name__ == '__main__':
     if current_config['type'] == 'kasum':
         echo_handler = MessageHandler(Filters.text & (~Filters.command), fill_kesem)
         dispatcher.add_handler(echo_handler)
-        fill_handler = CommandHandler('start', start_kasum)
+        fill_handler = CommandHandler('start', start_w_deperature)
         dispatcher.add_handler(fill_handler)
     elif current_config['type'] == 'really':
         fill_handler = MessageHandler(Filters.text & (~Filters.command), fill_really)
         dispatcher.add_handler(fill_handler)
-        fill_handler = CommandHandler('start', start_really)
+        fill_handler = CommandHandler('start', start_no_temperature)
         dispatcher.add_handler(fill_handler)
     elif current_config['type'] == 'nizanim':
         fill_handler = MessageHandler(Filters.text & (~Filters.command), fill_nizanim)
         dispatcher.add_handler(fill_handler)
-        fill_handler = CommandHandler('start', start_really)
+        fill_handler = CommandHandler('start', start_no_temperature)
         dispatcher.add_handler(fill_handler)
+    elif isinstance(current_config['type'], EducationWebTopFormFiller):
+        fill_handler = MessageHandler(Filters.text & (~Filters.command), fill_education_web_top)
+        dispatcher.add_handler(fill_handler)
+        fill_handler = CommandHandler('start', start_no_temperature)
+        dispatcher.add_handler(fill_handler)
+
 
     logging.info(f'starting bot for {child_first_name}')
     updater.start_polling()

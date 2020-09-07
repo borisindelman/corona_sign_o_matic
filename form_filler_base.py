@@ -28,9 +28,9 @@ class FormFillerBase(ABC):
 
     def _init_web_options(self):
         chrome_options = chrome.options.Options()
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--start-maximized')
-        chrome_options.add_argument('--lang=en-us')
+        # chrome_options.add_argument('--headless')
+        # chrome_options.add_argument('--start-maximized')
+        # chrome_options.add_argument('--lang=en-us')
 
         return chrome_options
 
@@ -57,3 +57,5 @@ class FormFillerBase(ABC):
         file_path = f'screenshot_{child_name}_{stage_name}.png'
         self._driver.get_screenshot_as_file(file_path)
         self.snapshots.append(file_path)
+
+

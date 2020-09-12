@@ -3,13 +3,15 @@ from abc import ABC, abstractmethod
 import time
 
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 import selenium.webdriver.chrome as chrome
 import platform
 
 
 class FormFillerBase(ABC):
-    def __init__(self, height_buffer = 1000):
+    def __init__(self, height_buffer = 1000, headless=True):
+        self.headless=headless
         self._init_driver(height_buffer)
         self._wait_seconds = 0.2
         self.snapshots = []
@@ -28,9 +30,10 @@ class FormFillerBase(ABC):
 
     def _init_web_options(self):
         chrome_options = chrome.options.Options()
-        # chrome_options.add_argument('--headless')
+        if self.headless:
+            chrome_options.add_argument('--headless')
         # chrome_options.add_argument('--start-maximized')
-        # chrome_options.add_argument('--lang=en-us')
+        chrome_options.add_argument('--lang=en-us')
 
         return chrome_options
 
@@ -47,11 +50,20 @@ class FormFillerBase(ABC):
 
     def _fill_field(self,xpath:str, value:str):
         time.sleep(self._wait_seconds)
-        self._driver.find_element_by_xpath(self._xpaths[xpath]).send_keys(value)
+        try:
+            self._driver.find_element_by_xpath(self._xpaths[xpath]).send_keys(value)
+        except NoSuchElementException:
+            return False
+        return True
+
 
     def _click_field(self, xpath:str):
         time.sleep(self._wait_seconds)
-        self._driver.find_element_by_xpath(self._xpaths[xpath]).click()
+        try:
+            self._driver.find_element_by_xpath(self._xpaths[xpath]).click()
+        except NoSuchElementException:
+            return False
+        return True
 
     def _save_snapshot(self, child_name, stage_name):
         file_path = f'screenshot_{child_name}_{stage_name}.png'

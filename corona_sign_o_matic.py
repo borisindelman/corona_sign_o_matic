@@ -102,8 +102,8 @@ def save(form: io.BytesIO, filename: str):
 if __name__ == '__main__':
     # conf_list = ['peleg', 'noam', 'noa']
     # conf_list = ['peleg']
-    # conf_list = [{'child_name': 'peleg', 'type': 'hador_haba'}]
-    conf_list = [{'child_name': 'saar', 'type': 'saar'}]
+    conf_list = [{'child_name': 'peleg', 'type': 'hador_haba'},
+    {'child_name': 'saar', 'type': 'saar'}]
     # conf_list = [{'child_name': 'noam',
     #               'hebrew_child_name': 'נועם',
     #               'hebrew_parent_name': 'נגה ואופיר גולן',

@@ -1,31 +1,10 @@
-from os import system
 from collections import OrderedDict
 import time
-from time import strftime, gmtime
 
-from selenium.common.exceptions import NoSuchElementException, NoAlertPresentException
+from selenium.common.exceptions import NoAlertPresentException
 
-from form_filler_base import FormFillerBase
+from fillers.form_filler_base import FormFillerBase
 
-
-class EducationGanFormFiller(FormFillerBase):
-    def __init__(self):
-        self._url = r'https://parents.education.gov.il/prhnet/parents/rights-obligations-regulations/health-statement-kindergarden'
-        super().__init__(height_buffer=1500)
-
-        self._xpaths=OrderedDict({
-            'fill_request': '//*[@id="main-content"]/section[1]/div/health-declaration/div/div[1]/div[4]/div/div/div/input',
-            'user_name': '//*[@id="HIN_USERID"]',
-            'password': '//*[@id="Ecom_Password"]',
-            'submit_login': '//*[@id="loginButton2"]'
-        })
-
-    def _fill_form(self, form_fields, submit=False):
-        self._click_field('fill_request')
-        time.sleep(3)
-        self._fill_field('user_name', '4135457')
-        self._fill_field('password', '9921')
-        self._click_field('submit_login')
 
 class EducationWebTopFormFiller(FormFillerBase):
     def __init__(self):
@@ -45,6 +24,8 @@ class EducationWebTopFormFiller(FormFillerBase):
             'close2': '//*[@id="window_alert"]/div/table/tbody/tr/td[6]/img',
             'iframe': "//*[@id='window_63_iframe']",
         })
+        self.expected_snapshots = 2
+        self.debug_snapshots = 0
 
     def _fill_form(self, form_fields, submit=False):
         self._click_field('login_click')
@@ -78,8 +59,3 @@ class EducationWebTopFormFiller(FormFillerBase):
             time.sleep(3)
 
             self._save_snapshot(form_fields['parent_name'], 'qr_code')
-
-
-if __name__ == '__main__':
-    # EducationGanFormFiller().fill_form({})
-    EducationWebTopFormFiller().fill_form({})

@@ -1,9 +1,8 @@
-from os import system
 from collections import OrderedDict
 import time
 from time import strftime, gmtime
 
-from form_filler_base import FormFillerBase
+from fillers.form_filler_base import FormFillerBase
 
 
 class NizanimFormFiller(FormFillerBase):
@@ -26,6 +25,8 @@ class NizanimFormFiller(FormFillerBase):
              'remark': '//*[@id="mG61Hd"]/div[2]/div/div[2]/div[10]/div/div/div[2]/div/div[1]/div[2]/textarea',
              'submit': '//*[@id="mG61Hd"]/div[2]/div/div[3]/div[1]/div/div/span'
              })
+        self.expected_snapshots = 2
+        self.debug_snapshots = 1
 
     def _fill_form(self, form_fields, submit=False):
         # time.sleep(10)

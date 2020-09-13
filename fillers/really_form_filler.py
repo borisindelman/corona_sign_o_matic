@@ -1,17 +1,14 @@
-from os import system
 from collections import OrderedDict
 import time
 from time import strftime, gmtime
 
-from form_filler_base import FormFillerBase
+from fillers.form_filler_base import FormFillerBase
 
 
 class ReallyFormFiller(FormFillerBase):
     def __init__(self):
         self._url = r'https://forms.office.com/Pages/ResponsePage.aspx?id=q-zudymq8EqWdq6fOE-ZLVl3deFdlz1Ntret4bJZePRUOE1aN1pJRUpFQTZUTkdQMDZQTUlMODlRSyQlQCN0PWcu'
         super().__init__(height_buffer=1500)
-
-
 
         self._xpaths_heb = OrderedDict(
             {
@@ -38,6 +35,8 @@ class ReallyFormFiller(FormFillerBase):
         self._xpaths_en_us = self._xpaths_heb
 
         self._xpaths_en_US = self._xpaths_en_il
+        self.expected_snapshots = 2
+        self.debug_snapshots = 1
 
     def _fill_form(self, form_fields, submit=False):
         if r'lang="he"' in self._driver.page_source:

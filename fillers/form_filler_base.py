@@ -12,12 +12,15 @@ import platform
 class FormFillerBase(ABC):
     def __init__(self, height_buffer = 1000, headless=True):
         self.headless=headless
-        self._init_driver(height_buffer)
+        self.height_buffer = height_buffer
         self._wait_seconds = 0.2
         self.snapshots = []
+        self.expected_snapshots = 0
+        self.debug_snapshots = 0
+        self.is_temperature_required = False
 
-    def _init_driver(self, height_buffer):
-        chrome_driver_path = os.path.join(os.path.dirname(__file__), 'executables', 'chromedriver')
+    def _init_driver(self):
+        chrome_driver_path = os.path.join(os.path.dirname(__file__), '../executables', 'chromedriver')
         chrome_options = self._init_web_options()
         if platform.system() == 'Windows':
             chrome_driver_path =chrome_driver_path + '.exe'
@@ -25,7 +28,7 @@ class FormFillerBase(ABC):
                                         chrome_options=chrome_options)
 
         ele = self._driver.get_window_size()
-        total_height = ele['height'] + height_buffer
+        total_height = ele['height'] + self.height_buffer
         self._driver.set_window_size(ele['width'], total_height)
 
     def _init_web_options(self):
@@ -38,6 +41,7 @@ class FormFillerBase(ABC):
         return chrome_options
 
     def fill_form(self, form_fields, submit=False):
+        self._init_driver()
         self._driver.get(self._url)
         time.sleep(2)
         self._fill_form(form_fields, submit)

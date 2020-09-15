@@ -4,5 +4,6 @@ venv/
 __pycache__/
 conf/
 *.pdf
-#*.conf
+*.conf
 logs/
+reminder_list.json

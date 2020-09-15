@@ -158,10 +158,10 @@ def reminder_fill_handler(update, context):
 
     if user_name in reminder_list:
         del reminder_list[user_name]
-        send_message(update=update, context=context, message="Removing Reminder.")
+        send_message(update=update, context=context, message="OK, Removing your daily reminder.")
     else:
         reminder_list[user_name] = {'bot_name': bot_name, 'chat_id': chat_id, 'time': '07:00'}
-        send_message(update=update, context=context, message="Adding Reminder")
+        send_message(update=update, context=context, message="OK, I'm setting up a daily reminder fo you :)")
     with open('reminder_list.json', 'w') as fp:
         json.dump(reminder_list, fp)
 
@@ -200,6 +200,9 @@ if __name__ == '__main__':
     bot_name = args['name']
 
     cfg = configparser.ConfigParser()
+    conf_path = os.path.join('conf', f"{bot_name}.conf")
+    assert os.path.isfile(conf_path), f"unrecognized bot name: {bot_name}"
+
     cfg.read(f"conf/{bot_name}.conf")
 
     current_config = cfg._sections['filler']

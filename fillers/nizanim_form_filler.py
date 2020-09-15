@@ -31,7 +31,7 @@ class NizanimFormFiller(FormFillerBase):
     def _fill_form(self, form_fields, submit=False):
         # time.sleep(10)
         self._fill_field('email', form_fields['email'])
-        self._fill_field('date', strftime("%d/%m/%Y", gmtime()))
+        self._fill_field('date', strftime("%m/%d/%Y", gmtime()))
         self._fill_field('hebrew_child_first_name', form_fields['hebrew_child_first_name'])
         self._fill_field('hebrew_child_last_name', form_fields['hebrew_child_last_name'])
         self._click_field('gan')

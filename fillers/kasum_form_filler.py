@@ -26,7 +26,7 @@ class KasumFormFiller(FormFillerBase):
 
 
     def _fill_form(self, form_fields, submit=False):
-        self._fill_field('date', strftime("%d/%m/%Y", gmtime()))
+        self._fill_field('date', strftime("%m/%d/%Y", gmtime()))
         self._fill_field('hebrew_child_first_name', form_fields['hebrew_child_first_name'])
         self._click_field('checked_temperature')
         self._click_field('family_members')

@@ -54,7 +54,7 @@ class ReallyFormFiller(FormFillerBase):
         self._fill_field('hebrew_parent_name', form_fields['hebrew_parent_name'])
         self._fill_field('phone_number', form_fields['phone_number'])
         self._click_field('approval')
-        self._fill_field('date', strftime("%d/%m/%Y", gmtime()))
+        self._fill_field('date', strftime("%m/%d/%Y", gmtime()))
         self._save_snapshot(form_fields['child_first_name'], 'filled_form')
 
         # submit

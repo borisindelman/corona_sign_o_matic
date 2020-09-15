@@ -23,7 +23,6 @@ class EducationGanFormFiller(FormFillerBase):
     def _fill_form(self, form_fields, submit=False):
         self._click_field('fill_request')
         time.sleep(3)
-        print(form_fields)
         self._fill_field('user_name', form_fields['user_name'])
         self._fill_field('password', form_fields['password'])
         time.sleep(3)

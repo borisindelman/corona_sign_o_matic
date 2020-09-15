@@ -69,6 +69,15 @@ class FormFillerBase(ABC):
             return False
         return True
 
+    def _select_box(self, xpath:str):
+        time.sleep(self._wait_seconds)
+        try:
+            if not self._driver.find_element_by_xpath(self._xpaths[xpath]).is_selected():
+                self._driver.find_element_by_xpath(self._xpaths[xpath]).click()
+        except NoSuchElementException:
+            return False
+        return True
+
     def _save_snapshot(self, child_name, stage_name):
         file_path = f'screenshot_{child_name}_{stage_name}.png'
         self._driver.get_screenshot_as_file(file_path)

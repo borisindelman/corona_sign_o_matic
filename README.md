@@ -1,4 +1,4 @@
-<img src="media/logo.png" width="200">
+<img src="media/logo.png" width="100">
 
 # Corona-sign-o-matic
 

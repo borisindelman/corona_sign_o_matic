@@ -1,4 +1,4 @@
-![alt text](media/logo.png "Title")
+![alt text](media/logo.png "Title"){width="200px"}
 
 # Corona-sign-o-matic
 

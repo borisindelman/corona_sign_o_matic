@@ -1,6 +1,8 @@
+import pdb
 from collections import OrderedDict
 import time
 
+import _gdbm
 from selenium.common.exceptions import NoAlertPresentException
 
 from fillers.form_filler_base import FormFillerBase
@@ -9,7 +11,7 @@ from fillers.form_filler_base import FormFillerBase
 class MashovFormFiller(FormFillerBase):
     def __init__(self):
         self._url = r'https://web.mashov.info/students/login'
-        super().__init__(height_buffer=1500)
+        super().__init__(height_buffer=500)
 
         self._xpaths=OrderedDict({
             'school_name': '//*[@id="mat-input-3"]',
@@ -20,8 +22,10 @@ class MashovFormFiller(FormFillerBase):
             'password': '//*[@id="mat-input-4"]',
             'enter': '//*[@id="mat-tab-content-0-0"]/div/div/button[1]',
             'daily_corona': '//*[@id="mainView"]/mat-sidenav-content/mshv-student-covidsplash/mat-card/mat-card-content/div[3]/mat-card/span',
-            'confirm_1': '//*[@id="mat-checkbox-3"]/label/div',
-            'confirm_2': '//*[@id="mat-checkbox-4"]/label/div',
+            'confirm_1_box': '//*[@id="mat-checkbox-1-input"]',
+            'confirm_1_check': '//*[@id="mat-checkbox-1"]/label/div/div[1]',
+            'confirm_2_box': '//*[@id="mat-checkbox-2-input"]',
+            'confirm_2_check': '//*[@id="mat-checkbox-2"]/label/div/div[1]',
             'submit': '//*[@id="mainView"]/mat-sidenav-content/mshv-students-covid-clearance/mat-card/mat-card-actions/button/span[1]'
         })
         self.expected_snapshots = 1
@@ -39,14 +43,14 @@ class MashovFormFiller(FormFillerBase):
         time.sleep(6)
         self._click_field('daily_corona')
         time.sleep(3)
-
-        self._select_box('confirm_1')
-        self._select_box('confirm_2')
+        self._select_box('confirm_1_box', 'confirm_1_check')
+        self._select_box('confirm_2_box', 'confirm_2_check')
         if submit:
-            self._click_field('submit')
+            time.sleep(60)
+
+            # self._click_field('submit')
             try:
                 self._driver.switch_to.alert.accept()
             except NoAlertPresentException:
                 pass
-            time.sleep(3)
             self._save_snapshot(form_fields['child_first_name'], 'submit_form')

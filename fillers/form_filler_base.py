@@ -69,11 +69,12 @@ class FormFillerBase(ABC):
             return False
         return True
 
-    def _select_box(self, xpath:str):
+    def _select_box(self, box_xpath, check_xpath:str):
         time.sleep(self._wait_seconds)
         try:
-            if not self._driver.find_element_by_xpath(self._xpaths[xpath]).is_selected():
-                self._driver.find_element_by_xpath(self._xpaths[xpath]).click()
+            if not self._driver.find_element_by_xpath(self._xpaths[box_xpath]).is_selected():
+                element = self._driver.find_element_by_xpath(self._xpaths[check_xpath])
+                self._driver.execute_script("arguments[0].click();", element)
         except NoSuchElementException:
             return False
         return True

@@ -1,4 +1,4 @@
-<img src="media/logo.png" width="100"> # Corona-sign-o-matic
+# <img src="media/logo.png" width="100"> Corona-sign-o-matic
 
 ## What is it?
 

@@ -46,7 +46,7 @@ class MashovFormFiller(FormFillerBase):
         self._select_box('confirm_1_box', 'confirm_1_check')
         self._select_box('confirm_2_box', 'confirm_2_check')
         if submit:
-            time.sleep(60)
+            time.sleep(3)
 
             # self._click_field('submit')
             try:

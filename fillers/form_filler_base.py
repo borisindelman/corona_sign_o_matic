@@ -35,7 +35,7 @@ class FormFillerBase(ABC):
         chrome_options = chrome.options.Options()
         if self.headless:
             chrome_options.add_argument('--headless')
-        # chrome_options.add_argument('--start-maximized')
+        chrome_options.add_argument('--start-maximized')
         chrome_options.add_argument('--lang=en-us')
 
         return chrome_options

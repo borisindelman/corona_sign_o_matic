@@ -20,7 +20,8 @@ class FormFillerBase(ABC):
         self.is_temperature_required = False
 
     def _init_driver(self):
-        chrome_driver_path = os.path.join(os.path.dirname(__file__), '../executables', 'chromedriver')
+        #chrome_driver_path = os.path.join(os.path.dirname(__file__), '../executables', 'chromedriver')
+        chrome_driver_path = 'chromedriver'
         chrome_options = self._init_web_options()
         if platform.system() == 'Windows':
             chrome_driver_path =chrome_driver_path + '.exe'

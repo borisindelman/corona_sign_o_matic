@@ -6,7 +6,7 @@ cryptography==2.9.2
 decorator==4.4.2
 future==0.18.2
 pdfrw==0.4
-Pillow==7.1.2
+Pillow==8.1.1
 pycparser==2.20
 python-telegram-bot==12.7
 reportlab==3.5.42
